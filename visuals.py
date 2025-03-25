@@ -14,6 +14,12 @@ class Main:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    print("Space")
+                    self.parent.audio()
+                if event.key == pygame.K_n:
+                    self.parent.process.new("id")
 
     def run(self):
         while self.running:
@@ -28,7 +34,6 @@ class Main:
             obj.draw()
 
         pygame.display.flip()
-
 
     def update(self):
         for obj in self.parent.objs:

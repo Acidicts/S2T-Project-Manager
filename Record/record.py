@@ -9,7 +9,7 @@ import os
 r = sr.Recognizer()
 
 
-def record_audio(filename, duration, fs=44100):
+def record_audio(fs=44100):
     chunk = 1024
     form = pyaudio.paInt16
     channels = 2
@@ -19,7 +19,7 @@ def record_audio(filename, duration, fs=44100):
 
     print("Recording...")
     frames = []
-    for _ in range(0, int(fs / chunk * duration)):
+    for _ in range(0, int(fs / chunk * 10)):
         data = stream.read(chunk)
         frames.append(data)
     print("Recording finished.")
@@ -28,15 +28,14 @@ def record_audio(filename, duration, fs=44100):
     stream.close()
     audio.terminate()
 
-    with wave.open(filename, 'wb') as wf:
+    if os.path.exists('temp.wav'):
+        os.remove('temp.wav')
+
+    with wave.open("temp.wav", 'wb') as wf:
         wf.setnchannels(channels)
         wf.setsampwidth(audio.get_sample_size(form))
         wf.setframerate(fs)
         wf.writeframes(b''.join(frames))
-
-    if os.path.exists('temp.wav'):
-        os.remove('temp.wav')
-    record_audio('temp.wav', 10)  # Record for 10 seconds
 
     # open the file
     with sr.AudioFile('temp.wav') as source:
